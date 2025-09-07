@@ -22,6 +22,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -46,6 +47,24 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        /* Safety-focused colors */
+        safety: {
+          high: "hsl(var(--safety-high))",
+          "high-foreground": "hsl(var(--safety-high-foreground))",
+          medium: "hsl(var(--safety-medium))",
+          "medium-foreground": "hsl(var(--safety-medium-foreground))",
+          low: "hsl(var(--safety-low))",
+          "low-foreground": "hsl(var(--safety-low-foreground))",
+        },
+        emergency: {
+          DEFAULT: "hsl(var(--emergency))",
+          foreground: "hsl(var(--emergency-foreground))",
+          glow: "hsl(var(--emergency-glow))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -80,10 +99,34 @@ export default {
             height: "0",
           },
         },
+        "emergency-pulse": {
+          "0%": {
+            transform: "scale(1)",
+            boxShadow: "0 0 0 0 hsl(var(--emergency-glow) / 0.7)",
+          },
+          "70%": {
+            transform: "scale(1.05)",
+            boxShadow: "0 0 0 10px hsl(var(--emergency-glow) / 0)",
+          },
+          "100%": {
+            transform: "scale(1)",
+            boxShadow: "0 0 0 0 hsl(var(--emergency-glow) / 0)",
+          },
+        },
+        "safety-glow": {
+          "0%, 100%": {
+            boxShadow: "0 0 5px hsl(var(--safety-high) / 0.5)",
+          },
+          "50%": {
+            boxShadow: "0 0 20px hsl(var(--safety-high) / 0.8)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "emergency-pulse": "emergency-pulse 2s infinite",
+        "safety-glow": "safety-glow 3s ease-in-out infinite",
       },
     },
   },

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Navigation from "@/components/Navigation";
 import Home from "@/components/Home";
 import TrackBus from "@/components/TrackBus";
@@ -36,12 +37,14 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="pb-20">
-        {renderContent()}
-      </main>
-    </div>
+    <ProtectedRoute>
+      <div className="min-h-screen bg-background">
+        <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+        <main className="pb-20">
+          {renderContent()}
+        </main>
+      </div>
+    </ProtectedRoute>
   );
 };
 

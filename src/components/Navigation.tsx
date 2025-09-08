@@ -10,9 +10,14 @@ import {
   Settings, 
   Info,
   Menu,
-  X
+  X,
+  LogOut,
+  User
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from '@/hooks/useAuth';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 
 interface NavigationProps {
   activeTab: string;
@@ -20,6 +25,11 @@ interface NavigationProps {
 }
 
 const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigationItems = [
@@ -52,27 +62,58 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
           </div>
         </div>
         
-        <div className="flex items-center space-x-1">
-          {navigationItems.map((item) => (
-            <Button
-              key={item.id}
-              variant={activeTab === item.id ? "default" : "ghost"}
-              size="sm"
-              onClick={() => handleTabClick(item.id)}
-              className="relative flex items-center space-x-2 px-4 py-2 transition-all"
-            >
-              <item.icon className="w-4 h-4" />
-              <span className="hidden lg:inline">{item.label}</span>
-              {item.badge && (
-                <Badge variant="secondary" className="ml-1 text-xs">
-                  {item.badge}
-                </Badge>
-              )}
-              {activeTab === item.id && (
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-0.5 bg-primary rounded-full" />
-              )}
-            </Button>
-          ))}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center space-x-1">
+            {navigationItems.map((item) => (
+              <Button
+                key={item.id}
+                variant={activeTab === item.id ? "default" : "ghost"}
+                size="sm"
+                onClick={() => handleTabClick(item.id)}
+                className="relative flex items-center space-x-2 px-4 py-2 transition-all"
+              >
+                <item.icon className="w-4 h-4" />
+                <span className="hidden lg:inline">{item.label}</span>
+                {item.badge && (
+                  <Badge variant="secondary" className="ml-1 text-xs">
+                    {item.badge}
+                  </Badge>
+                )}
+                {activeTab === item.id && (
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full h-0.5 bg-primary rounded-full" />
+                )}
+              </Button>
+            ))}
+          </div>
+
+          {/* User Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                    {user?.email?.charAt(0).toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+              <div className="flex flex-col space-y-1 p-2">
+                <p className="text-sm font-medium leading-none">{user?.user_metadata?.full_name || 'User'}</p>
+                <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onTabChange('profile')}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSignOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Sign Out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </nav>
 
@@ -89,18 +130,48 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             </div>
           </div>
           
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </Button>
+          <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-6 w-6">
+                    <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                      {user?.email?.charAt(0).toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <div className="flex flex-col space-y-1 p-2">
+                  <p className="text-sm font-medium leading-none">{user?.user_metadata?.full_name || 'User'}</p>
+                  <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => onTabChange('profile')}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sign Out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu Dropdown */}

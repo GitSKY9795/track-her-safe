@@ -1,49 +1,23 @@
-import { useState } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import Navigation from "@/components/Navigation";
-import Home from "@/components/Home";
-import TrackBus from "@/components/TrackBus";
-import SafetyCenter from "@/components/SafetyCenter";
-import ReportIncident from "@/components/ReportIncident";
-import Community from "@/components/Community";
-import RoutePlanner from "@/components/RoutePlanner";
-import AdminDashboard from "@/components/AdminDashboard";
-import About from "@/components/About";
+import UserPortal from "@/components/UserPortal";
+import AdminPortal from "@/components/AdminPortal";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState("home");
+  const { userProfile, loading } = useAuth();
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case "home":
-        return <Home onTabChange={setActiveTab} />;
-      case "track":
-        return <TrackBus />;
-      case "safety":
-        return <SafetyCenter />;
-      case "report":
-        return <ReportIncident />;
-      case "community":
-        return <Community />;
-      case "routes":
-        return <RoutePlanner />;
-      case "admin":
-        return <AdminDashboard />;
-      case "about":
-        return <About />;
-      default:
-        return <Home onTabChange={setActiveTab} />;
-    }
-  };
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-4">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+        <p className="text-muted-foreground">Loading...</p>
+      </div>
+    </div>;
+  }
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-background">
-        <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
-        <main className="pb-20">
-          {renderContent()}
-        </main>
-      </div>
+      {userProfile?.role === 'admin' ? <AdminPortal /> : <UserPortal />}
     </ProtectedRoute>
   );
 };

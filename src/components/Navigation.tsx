@@ -12,7 +12,9 @@ import {
   Menu,
   X,
   LogOut,
-  User
+  User,
+  Ticket,
+  BookOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from '@/hooks/useAuth';
@@ -22,10 +24,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 interface NavigationProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  portalType?: 'user' | 'admin';
 }
 
-const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
-  const { user, signOut } = useAuth();
+const Navigation = ({ activeTab, onTabChange, portalType = 'user' }: NavigationProps) => {
+  const { user, userProfile, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -36,10 +39,11 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
     { id: "home", label: "Home", icon: Home, badge: null },
     { id: "track", label: "Track Bus", icon: Bus, badge: "Live" },
     { id: "safety", label: "Safety Center", icon: Shield, badge: "24/7" },
+    { id: "book", label: "Book Ticket", icon: Ticket, badge: "New" },
+    { id: "bookings", label: "My Bookings", icon: BookOpen, badge: null },
     { id: "report", label: "Report", icon: FileText, badge: null },
     { id: "community", label: "Community", icon: Users, badge: null },
     { id: "routes", label: "Routes", icon: Route, badge: null },
-    { id: "admin", label: "Admin", icon: Settings, badge: null },
     { id: "about", label: "About", icon: Info, badge: null },
   ];
 
@@ -99,7 +103,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <div className="flex flex-col space-y-1 p-2">
-                <p className="text-sm font-medium leading-none">{user?.user_metadata?.full_name || 'User'}</p>
+                <p className="text-sm font-medium leading-none">{userProfile?.full_name || 'User'}</p>
                 <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
               </div>
               <DropdownMenuSeparator />
@@ -143,7 +147,7 @@ const Navigation = ({ activeTab, onTabChange }: NavigationProps) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <div className="flex flex-col space-y-1 p-2">
-                  <p className="text-sm font-medium leading-none">{user?.user_metadata?.full_name || 'User'}</p>
+                  <p className="text-sm font-medium leading-none">{userProfile?.full_name || 'User'}</p>
                   <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
                 </div>
                 <DropdownMenuSeparator />

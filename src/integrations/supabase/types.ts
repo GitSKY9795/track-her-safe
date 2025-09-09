@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          booking_date: string
+          booking_status: string | null
+          bus_id: string | null
+          created_at: string | null
+          fare_amount: number
+          id: string
+          payment_status: string | null
+          qr_code_data: string | null
+          route_id: string | null
+          seat_number: number | null
+          travel_date: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          booking_date: string
+          booking_status?: string | null
+          bus_id?: string | null
+          created_at?: string | null
+          fare_amount: number
+          id?: string
+          payment_status?: string | null
+          qr_code_data?: string | null
+          route_id?: string | null
+          seat_number?: number | null
+          travel_date: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          booking_date?: string
+          booking_status?: string | null
+          bus_id?: string | null
+          created_at?: string | null
+          fare_amount?: number
+          id?: string
+          payment_status?: string | null
+          qr_code_data?: string | null
+          route_id?: string | null
+          seat_number?: number | null
+          travel_date?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_bus_id_fkey"
+            columns: ["bus_id"]
+            isOneToOne: false
+            referencedRelation: "buses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       buses: {
         Row: {
           bus_number: string
@@ -154,6 +217,7 @@ export type Database = {
           id: string
           phone_number: string | null
           preferred_language: string | null
+          role: string | null
           safety_preferences: Json | null
           updated_at: string | null
           user_id: string
@@ -166,6 +230,7 @@ export type Database = {
           id?: string
           phone_number?: string | null
           preferred_language?: string | null
+          role?: string | null
           safety_preferences?: Json | null
           updated_at?: string | null
           user_id: string
@@ -178,6 +243,7 @@ export type Database = {
           id?: string
           phone_number?: string | null
           preferred_language?: string | null
+          role?: string | null
           safety_preferences?: Json | null
           updated_at?: string | null
           user_id?: string

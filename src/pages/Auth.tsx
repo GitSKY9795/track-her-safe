@@ -7,12 +7,13 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, Bus, Users, MapPin } from 'lucide-react';
+import { Shield, Bus, Users, MapPin, User, Settings } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [loginType, setLoginType] = useState<'user' | 'admin'>('user');
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
@@ -55,7 +56,7 @@ const Auth = () => {
     const password = formData.get('password') as string;
     const fullName = formData.get('fullName') as string;
 
-    const { error } = await signUp(email, password, fullName);
+    const { error } = await signUp(email, password, fullName, loginType);
     
     if (error) {
       setError(error.message);
@@ -125,10 +126,34 @@ const Auth = () => {
           <CardHeader className="text-center">
             <CardTitle>Get Started</CardTitle>
             <CardDescription>
-              Sign in to your account or create a new one
+              Choose your login type and sign in to your account
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Login Type Selection */}
+            <div className="flex space-x-2 mb-6">
+              <Button
+                type="button"
+                variant={loginType === 'user' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setLoginType('user')}
+                className="flex-1"
+              >
+                <User className="w-4 h-4 mr-2" />
+                User Portal
+              </Button>
+              <Button
+                type="button"
+                variant={loginType === 'admin' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setLoginType('admin')}
+                className="flex-1"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Admin Portal
+              </Button>
+            </div>
+
             <Tabs defaultValue="signin" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="signin">Sign In</TabsTrigger>
